@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, F, types
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.filters import Command
 from urllib.parse import quote
 
@@ -115,27 +115,31 @@ async def handle_message(message: types.Message):
         await generate_text(message, model, prompt)
 
 @dp.callback_query(F.data.startswith("img_"))
-async def img_yes(callback: CallbackQuery):
+async def img_yes(callback: CallbackQuery, state: FSMContext):
     _, model = callback.data.split("_", 1)
     prompt = current_prompts.get(callback.from_user.id, "кот")
     await callback.message.edit_text(f"🖼️ *{IMAGE_MODELS[model]}*...")
+    await callback.answer()
     await generate_image(callback.message, model, prompt)
 
 @dp.callback_query(F.data == "text")
-async def text_yes(callback: CallbackQuery):
+async def text_yes(callback: CallbackQuery, state: FSMContext):
     prompt = current_prompts.get(callback.from_user.id, "")
     model = await ask_mistral_route(prompt)
     await callback.message.edit_text("🤖 Генерирую...")
+    await callback.answer()
     await generate_text(callback.message, model, prompt)
 
 @dp.callback_query(F.data == "test_img")
 async def test_img(callback: CallbackQuery):
     await callback.message.edit_text("🖼️ Тест...")
+    await callback.answer()
     await generate_image(callback.message, "flux", "кот в космосе")
 
 @dp.callback_query(F.data == "test_text")
 async def test_text(callback: CallbackQuery):
     await callback.message.edit_text("🤖 Тест...")
+    await callback.answer()
     await generate_text(callback.message, "grok", "посчитай буквы r в strawberry")
 
 async def main():
