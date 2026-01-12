@@ -11,7 +11,7 @@ from aiogram.filters import Command
 from urllib.parse import quote
 
 # ТОКЕНЫ В КОДЕ
-BOT_TOKEN = "7762578506:AAH5qTqK1C6wYkZ2QfI6aG6hK6zJ6oK6zJ6"  # ТВОЙ ТОКЕН
+BOT_TOKEN = "8572736872:AAEhwGOvA4r_ThjJBfvboNYP08r8g9CGmCo"  # ТВОЙ ТОКЕН
 API_KEY = "sk_pKWqZWQ9cdXNCIFRSjNqnQaCwEN7NNVx"
 
 # 🖼️ 10 КАРТИНОК
